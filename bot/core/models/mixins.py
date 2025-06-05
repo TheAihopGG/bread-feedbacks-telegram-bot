@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import declared_attr, Mapped, mapped_column
 
-from ..configs.bot_config import DATE_FORMATTER
+from ...core.configs.bot_config import BOT_TZ
 
 
 class IDMixin:
@@ -22,13 +22,19 @@ class TelegramIDMixin:
 class CreatedAtMixin:
     @declared_attr
     def created_at(cls) -> Mapped[datetime]:
-        return mapped_column(default=datetime.now, server_default=func.now())
+        return mapped_column(
+            default=lambda: datetime.now(BOT_TZ),
+            server_default=func.now(),
+        )
 
 
 class UpdatedAtMixin:
     @declared_attr
     def updated_at(cls) -> Mapped[datetime]:
-        return mapped_column(default=datetime.now, onupdate=datetime.now)
+        return mapped_column(
+            default=lambda: datetime.now(BOT_TZ),
+            onupdate=lambda: datetime.now(BOT_TZ),
+        )
 
 
 __all__ = [
