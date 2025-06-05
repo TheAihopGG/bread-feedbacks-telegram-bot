@@ -1,4 +1,5 @@
 from aiogram import Bot, Dispatcher
+from .core.system_logger import system_logger
 from .routers import (
     admin,
     user,
@@ -12,6 +13,7 @@ dp.include_routers(
     admin.router,
     user.router,
 )
+system_logger.info("Bot initialized")
 __all__ = [
     "bot",
     "dp",
