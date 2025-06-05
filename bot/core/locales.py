@@ -1,4 +1,6 @@
 from orjson import loads
+
+from ..core.system_logger import system_logger_decorator
 from .configs.locales_config import LOCALES, DEFAULT_LOCALE_NAME
 
 locales_dict: dict[str, dict[str, str]] = {}
@@ -10,8 +12,8 @@ def get_locale_value(
     key: str,
     locale_name: str,
 ) -> str:
-    if locale := locales_dict.get(key):
-        if value := locale.get(locale_name):
+    if locale := locales_dict.get(locale_name):
+        if value := locale.get(key):
             return value
 
     return get_default_locale_value(key)
