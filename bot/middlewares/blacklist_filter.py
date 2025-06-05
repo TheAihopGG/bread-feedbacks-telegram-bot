@@ -4,6 +4,7 @@ from aiogram.types import Message, TelegramObject
 
 from ..services.admin.crud import is_in_blacklist
 from ..core.locales import get_locale_value
+from ..core.database import sessionmaker
 
 
 class BlackListFilterMiddleware(BaseMiddleware):
@@ -14,14 +15,17 @@ class BlackListFilterMiddleware(BaseMiddleware):
         data: dict[str, Any],
     ) -> Any:
         if event.from_user:
-            if blacklist_user_object := await is_in_blacklist(event.from_user.id):
-                await event.answer(
-                    get_locale_value("USER_IN_BLACKLIST", "ru").format(
-                        blacklist_user_object.reason
+            async with sessionmaker() as session:
+                if blacklist_user_object := await is_in_blacklist(
+                    session, event.from_user.id
+                ):
+                    await event.answer(
+                        get_locale_value("USER_IN_BLACKLIST", "ru").format(
+                            blacklist_user_object.reason
+                        )
                     )
-                )
-            else:
-                return await handler(event, data)
+                else:
+                    return await handler(event, data)
 
 
 __all__ = [
