@@ -11,5 +11,7 @@
     "BLACKLIST_COMMAND_ANSWER_STEP_1": "Список заблокированных пользователей:\n\n{список}",
     "TEXT_IN_TOO_LONG_ERROR_ANSWER": "❌ Сообщение слишком длинное. Пожалуйста, сократите текст.",
     "INVALID_VALUE_ERROR_ANSWER": "❌ Некорректное значение. Попробуйте еще раз.",
-    "USER_WAS_NOT_FOUND_ERROR_ANSWER": "❌ Пользователь не найден."
+    "USER_WAS_NOT_FOUND_ERROR_ANSWER": "❌ Пользователь не найден.",
+    "USER_IN_BLACKLIST":"❌ Вы были заблокированы по причине: {0}",
+    "ACCESS_DENIED":"❌ У вас недостаточно прав"
 }
