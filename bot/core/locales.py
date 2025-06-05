@@ -1,7 +1,29 @@
 from orjson import loads
+from typing import Literal
 
 from ..core.system_logger import system_logger_decorator
 from .configs.locales_config import LOCALES, DEFAULT_LOCALE_NAME
+
+
+type literals = Literal[
+    "START_COMMAND_ANSWER",
+    "MENU_COMMAND_ANSWER",
+    "SEND_FEEDBACK_ANSWER",
+    "SEND_FEEDBACK_ANSWER_STEP_1",
+    "SEND_FEEDBACK_ANSWER_STEP_2",
+    "SEND_FEEDBACK_ANSWER_STEP_3",
+    "CANCEL_COMMAND_ANSWER",
+    "ADMIN_PANEL_COMMAND_ANSWER",
+    "ADD_TO_BLACKLIST_COMMAND_ANSWER",
+    "REMOVE_FROM_BLACKLIST_COMMAND_ANSWER",
+    "BLACKLIST_COMMAND_ANSWER_STEP_1",
+    "TEXT_IS_TOO_LONG_ERROR_ANSWER",
+    "INVALID_VALUE_ERROR_ANSWER",
+    "USER_WAS_NOT_FOUND_ERROR_ANSWER",
+    "USER_IN_BLACKLIST",
+    "ACCESS_DENIED",
+]
+
 
 locales_dict: dict[str, dict[str, str]] = {}
 for locale_name, locale_filename in LOCALES.items():
@@ -9,7 +31,7 @@ for locale_name, locale_filename in LOCALES.items():
 
 
 def get_locale_value(
-    key: str,
+    key: literals,
     locale_name: str,
 ) -> str:
     if locale := locales_dict.get(locale_name):
@@ -20,7 +42,7 @@ def get_locale_value(
 
 
 def get_default_locale_value(
-    key: str,
+    key: literals,
     default_locale_name: str = DEFAULT_LOCALE_NAME,
 ) -> str:
     if default_locale := locales_dict.get(default_locale_name):
