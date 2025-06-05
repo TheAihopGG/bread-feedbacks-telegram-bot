@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
 from .mixins import (
-    AuthorTelegramIDMixin,
+    UserTelegramIDMixin,
     IDMixin,
     CreatedAtMixin,
     UpdatedAtMixin,
@@ -13,7 +13,7 @@ from .mixins import (
 class BlacklistUserModel(
     Base,
     IDMixin,
-    AuthorTelegramIDMixin,
+    UserTelegramIDMixin,
     CreatedAtMixin,
     UpdatedAtMixin,
 ):
