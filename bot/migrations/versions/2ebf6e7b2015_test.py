@@ -1,8 +1,8 @@
-"""Create tables
+"""Test
 
-Revision ID: c3f02eeeee37
+Revision ID: 2ebf6e7b2015
 Revises: 
-Create Date: 2025-06-05 12:20:12.287075
+Create Date: 2025-06-05 18:03:29.226172
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'c3f02eeeee37'
+revision: str = '2ebf6e7b2015'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,11 +24,11 @@ def upgrade() -> None:
     op.create_table('blacklist_users',
     sa.Column('reason', sa.String(length=48), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('telegram_id', sa.Integer(), nullable=False),
+    sa.Column('user_telegram_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('telegram_id')
+    sa.UniqueConstraint('user_telegram_id')
     )
     op.create_index(op.f('ix_blacklist_users_id'), 'blacklist_users', ['id'], unique=False)
     op.create_table('feedbacks',
@@ -36,11 +36,11 @@ def upgrade() -> None:
     sa.Column('rate', sa.Integer(), nullable=False),
     sa.Column('will_he_buy_more', sa.Boolean(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('telegram_id', sa.Integer(), nullable=False),
+    sa.Column('author_telegram_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('telegram_id')
+    sa.UniqueConstraint('author_telegram_id')
     )
     op.create_index(op.f('ix_feedbacks_id'), 'feedbacks', ['id'], unique=False)
     # ### end Alembic commands ###
