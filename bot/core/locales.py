@@ -22,6 +22,7 @@ type literals = Literal[
     "USER_WAS_NOT_FOUND_ERROR_ANSWER",
     "USER_IN_BLACKLIST",
     "ACCESS_DENIED",
+    "ENTER_TEXT_FROM_KEYBOARD",
 ]
 
 
