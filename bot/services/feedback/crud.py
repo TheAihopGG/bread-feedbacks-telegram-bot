@@ -7,7 +7,9 @@ from ...core.models import FeedbackModel
 
 @async_system_logger_decorator()
 async def send_feedback(
-    content: str,
+    message: str,
+    rate: int,
+    will_he_buy_more: bool,
     author_telegram_id: int,
 ) -> bool:
     async with sessionmaker() as session:
@@ -25,7 +27,7 @@ async def send_feedback(
                     FeedbackModel,
                 )
                 .values(
-                    content=content,
+                    content=message,
                 )
                 .where(
                     FeedbackModel.author_telegram_id == author_telegram_id,
@@ -35,7 +37,9 @@ async def send_feedback(
         else:
             session.add(
                 FeedbackModel(
-                    content=content,
+                    message=message,
+                    rate=rate,
+                    will_he_buy_more=will_he_buy_more,
                     author_telegram_id=author_telegram_id,
                 )
             )
