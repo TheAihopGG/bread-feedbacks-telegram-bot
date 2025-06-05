@@ -19,6 +19,14 @@ class AuthorTelegramIDMixin:
         return mapped_column(unique=cls._telegram_id_unique)
 
 
+class UserTelegramIDMixin:
+    _telegram_id_unique: bool = True
+
+    @declared_attr
+    def user_telegram_id(cls) -> Mapped[int]:
+        return mapped_column(unique=cls._telegram_id_unique)
+
+
 class CreatedAtMixin:
     @declared_attr
     def created_at(cls) -> Mapped[datetime]:
