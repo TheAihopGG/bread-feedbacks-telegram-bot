@@ -11,11 +11,11 @@ class IDMixin:
         return mapped_column(primary_key=True, index=True)
 
 
-class TelegramIDMixin:
+class AuthorTelegramIDMixin:
     _telegram_id_unique: bool = True
 
     @declared_attr
-    def telegram_id(cls) -> Mapped[int]:
+    def author_telegram_id(cls) -> Mapped[int]:
         return mapped_column(unique=cls._telegram_id_unique)
 
 
@@ -39,7 +39,7 @@ class UpdatedAtMixin:
 
 __all__ = [
     "IDMixin",
-    "TelegramIDMixin",
+    "AuthorTelegramIDMixin",
     "CreatedAtMixin",
     "UpdatedAtMixin",
 ]

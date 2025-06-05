@@ -1,8 +1,8 @@
 from .base import Base
-from .mixins import IDMixin, TelegramIDMixin
+from .mixins import IDMixin, AuthorTelegramIDMixin
 
 
-class BlacklistUserDeletedLogModel(Base, IDMixin, TelegramIDMixin):
+class BlacklistUserDeletedLogModel(Base, IDMixin, AuthorTelegramIDMixin):
     __tablename__ = "blacklist_user_deleted_logs"
 
 

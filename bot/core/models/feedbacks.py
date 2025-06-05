@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
 from .mixins import (
-    TelegramIDMixin,
+    AuthorTelegramIDMixin,
     IDMixin,
     CreatedAtMixin,
     UpdatedAtMixin,
@@ -13,7 +13,7 @@ from .mixins import (
 class FeedbackModel(
     Base,
     IDMixin,
-    TelegramIDMixin,
+    AuthorTelegramIDMixin,
     CreatedAtMixin,
     UpdatedAtMixin,
 ):
