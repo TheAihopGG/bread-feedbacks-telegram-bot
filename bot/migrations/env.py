@@ -22,20 +22,15 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from core.models import Base
 from core.configs.database_config import (
-    DATABASES,
-    TEST_DATABASE_NAME,
-    PROD_DATABASE_NAME,
-    DATABASE_TEST_MODE,
+    DEV_DATABASE_URL,
+    PROD_DATABASE_URL,
+    DATABASE_DEV_MODE,
 )
 
 target_metadata = Base.metadata
 config.set_main_option(
     "sqlalchemy.url",
-    (
-        DATABASES[TEST_DATABASE_NAME]
-        if DATABASE_TEST_MODE
-        else DATABASES[PROD_DATABASE_NAME]
-    ),
+    (DEV_DATABASE_URL if DATABASE_DEV_MODE else PROD_DATABASE_URL),
 )
 
 # other values from the config, defined by the needs of env.py,
