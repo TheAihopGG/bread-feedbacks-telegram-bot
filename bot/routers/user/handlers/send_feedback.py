@@ -3,15 +3,15 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import (
     Message,
     CallbackQuery,
-    InlineKeyboardMarkup,
     ReplyKeyboardMarkup,
     KeyboardButton,
 )
-from ..keyboards import cancel_inline_button
+from ..keyboards import cancel_and_menu_inline_keyboard, yes_or_no_keyboard
 
 from ....core.locales import get_locale_value
 from ....core.database import sessionmaker
 from ....services.feedback.crud import send_feedback as send_feedback_crud
+from ....core.configs.bot_config import FEEDBACK_MAX_LEN
 from ..forms import SendFeedbackForm
 
 
@@ -19,35 +19,25 @@ async def send_feedback(call: CallbackQuery, state: FSMContext):
     if call.message:
         await state.clear()
         await state.set_state(SendFeedbackForm.message)
+
         await call.message.answer(
             get_locale_value("SEND_FEEDBACK_ANSWER", "ru"),
-            reply_markup=InlineKeyboardMarkup(
-                inline_keyboard=[
-                    [
-                        cancel_inline_button,
-                    ]
-                ],
-            ),
+            reply_markup=cancel_and_menu_inline_keyboard,
         )
 
 
-async def send_feedback_step1(message: Message, state: FSMContext):
+async def send_feedback_get_message(message: Message, state: FSMContext):
     if message.text:
-        if len(message.text) < 256:
+        if len(message.text) < FEEDBACK_MAX_LEN:
             await state.update_data(message=message.text)
             await state.set_state(SendFeedbackForm.rate)
+
             await message.answer(
                 get_locale_value("SEND_FEEDBACK_ANSWER_STEP_1", "ru"),
-                reply_markup=InlineKeyboardMarkup(
-                    inline_keyboard=[
-                        [
-                            cancel_inline_button,
-                        ]
-                    ]
-                ),
+                reply_markup=cancel_and_menu_inline_keyboard,
             )
             await message.answer(
-                "Введите значение на клавиатуре",
+                get_locale_value("ENTER_TEXT_FROM_KEYBOARD", "ru"),
                 reply_markup=ReplyKeyboardMarkup(
                     keyboard=[
                         [
@@ -67,64 +57,39 @@ async def send_feedback_step1(message: Message, state: FSMContext):
                     "TEXT_IS_TOO_LONG_ERROR_ANSWER",
                     "ru",
                 ),
-                reply_markup=InlineKeyboardMarkup(
-                    inline_keyboard=[
-                        [
-                            cancel_inline_button,
-                        ]
-                    ]
-                ),
+                reply_markup=cancel_and_menu_inline_keyboard,
             )
 
 
-async def send_feedback_step2(message: Message, state: FSMContext):
+async def send_feedback_get_rate(message: Message, state: FSMContext):
     if message.text:
         if re.search(r"^[12345]{1}$", message.text):
             rate = int(message.text)
             await state.update_data(rate=rate)
             await state.set_state(SendFeedbackForm.will_he_by_more)
+
             await message.answer(
                 get_locale_value("SEND_FEEDBACK_ANSWER_STEP_2", "ru"),
-                reply_markup=InlineKeyboardMarkup(
-                    inline_keyboard=[
-                        [
-                            cancel_inline_button,
-                        ]
-                    ]
-                ),
+                reply_markup=cancel_and_menu_inline_keyboard,
             )
             await message.answer(
-                "Введите значение на клавиатуре",
-                reply_markup=ReplyKeyboardMarkup(
-                    keyboard=[
-                        [
-                            KeyboardButton(text="Да"),
-                            KeyboardButton(text="Нет"),
-                        ]
-                    ],
-                    one_time_keyboard=True,
-                ),
+                get_locale_value("ENTER_TEXT_FROM_KEYBOARD", "ru"),
+                reply_markup=yes_or_no_keyboard,
             )
         else:
             await message.answer(
                 get_locale_value("INVALID_VALUE_ERROR_ANSWER", "ru"),
-                reply_markup=InlineKeyboardMarkup(
-                    inline_keyboard=[
-                        [
-                            cancel_inline_button,
-                        ]
-                    ]
-                ),
+                reply_markup=cancel_and_menu_inline_keyboard,
             )
 
 
-async def send_feedback_step3(message: Message, state: FSMContext):
+async def send_feedback_get_will_he_by_more(message: Message, state: FSMContext):
     if message.text and message.from_user:
         if re.search(r"^Да|Нет$", message.text):
-            will_he_by_more = message.text == "y"
-            await state.update_data(will_he_by_more=will_he_by_more)
+            await state.update_data(will_he_by_more=message.text == "y")
             data = await state.get_data()
             await state.clear()
+
             async with sessionmaker() as session:
                 if await send_feedback_crud(
                     session,
@@ -136,15 +101,16 @@ async def send_feedback_step3(message: Message, state: FSMContext):
                     await message.answer(
                         get_locale_value("SEND_FEEDBACK_ANSWER_STEP_3", "ru")
                     )
-
         else:
             await message.answer(
                 get_locale_value("INVALID_VALUE_ERROR_ANSWER", "ru"),
-                reply_markup=InlineKeyboardMarkup(
-                    inline_keyboard=[
-                        [
-                            cancel_inline_button,
-                        ]
-                    ]
-                ),
+                reply_markup=cancel_and_menu_inline_keyboard,
             )
+
+
+__all__ = [
+    "send_feedback",
+    "send_feedback_get_message",
+    "send_feedback_get_rate",
+    "send_feedback_get_will_he_by_more",
+]
