@@ -10,7 +10,7 @@ async def is_in_blacklist(
     session: AsyncSession,
     telegram_id: int,
 ) -> BlacklistUserModel | None:
-    result = (
+    return (
         await session.execute(
             select(
                 BlacklistUserModel,
@@ -19,8 +19,6 @@ async def is_in_blacklist(
             )
         )
     ).scalar_one_or_none()
-
-    return result
 
 
 async def add_to_blacklist(
@@ -53,6 +51,23 @@ async def remove_from_blacklist(
     await session.commit()
 
     return bool(result.rowcount)
+
+
+async def get_blacklist(
+    session: AsyncSession,
+    count: int,
+) -> list[BlacklistUserModel]:
+    return list(
+        await session.scalars(
+            select(
+                BlacklistUserModel,
+            )
+            .order_by(
+                BlacklistUserModel.id,
+            )
+            .limit(count),
+        )
+    )
 
 
 def is_admin(telegram_id: int) -> bool:
