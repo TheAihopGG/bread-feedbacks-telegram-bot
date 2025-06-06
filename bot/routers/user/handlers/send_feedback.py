@@ -117,16 +117,17 @@ async def send_feedback_get_will_he_by_more(
             await state.clear()
 
             async with sessionmaker() as session:
-                if await send_feedback_crud(
+                await send_feedback_crud(
                     session,
                     message=data["message"],
                     rate=data["rate"],
                     will_he_buy_more=data["will_he_by_more"],
                     author_telegram_id=message.from_user.id,
-                ):
-                    await message.answer(
-                        get_locale_value("SEND_FEEDBACK_COMMAND_ANSWER_SUCCESS", "ru")
-                    )
+                    bot=message.bot,  # type: ignore
+                )
+                await message.answer(
+                    get_locale_value("SEND_FEEDBACK_COMMAND_ANSWER_SUCCESS", "ru")
+                )
         else:
             await message.answer(
                 get_locale_value("INVALID_VALUE_ERROR_ANSWER", "ru"),

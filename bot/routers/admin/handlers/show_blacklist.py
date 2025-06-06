@@ -46,6 +46,7 @@ async def show_blacklist_get_count(
                                 ]
                             ]
                         )
+                        or get_locale_value("EMPTY_BLACKLIST_COMMAND_ANSWER", "ru")
                     ),
                 )
         else:

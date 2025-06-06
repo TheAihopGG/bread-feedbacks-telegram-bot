@@ -4,7 +4,8 @@ from aiogram.types import (
     InlineKeyboardMarkup,
 )
 
-from ..keyboards import menu_inline_button
+from ..buttons import send_feedback_inline_button
+from ...global_buttons import menu_inline_button
 from ....core.locales import get_locale_value
 
 
@@ -14,6 +15,7 @@ async def start(message: Message):
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
                 [
+                    send_feedback_inline_button,
                     menu_inline_button,
                 ]
             ]
