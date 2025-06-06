@@ -99,19 +99,24 @@ async def send_feedback_get_will_he_by_more(
     state: FSMContext,
 ):
     if message.text and message.from_user:
-        if message.text == get_locale_value(
-            "YES",
-            "ru",
-        ) or message.text == get_locale_value(
-            "NO",
-            "ru",
+        if (
+            message.text.lower()
+            == get_locale_value(
+                "YES",
+                "ru",
+            ).lower()
+            or message.text.lower()
+            == get_locale_value(
+                "NO",
+                "ru",
+            ).lower()
         ):
             await state.update_data(
-                will_he_by_more=message.text
+                will_he_by_more=message.text.lower()
                 == get_locale_value(
                     "YES",
                     "ru",
-                )
+                ).lower()
             )
             data = await state.get_data()
             await state.clear()
