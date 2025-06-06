@@ -14,7 +14,7 @@ class AdminFilterMiddleware(BaseMiddleware):
         data: dict[str, Any],
     ) -> Any:
         if event.from_user:
-            if is_admin(event.from_user.id):
+            if not is_admin(event.from_user.id):
                 await event.answer(get_locale_value("ACCESS_DENIED", "ru"))
             else:
                 return await handler(event, data)
