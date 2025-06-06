@@ -1,7 +1,6 @@
 from orjson import loads
 from typing import Literal
 
-from ..core.system_logger import system_logger_decorator
 from .configs.locales_config import LOCALES, DEFAULT_LOCALE_NAME
 
 
