@@ -18,7 +18,7 @@ basicConfig(
     format=SYSTEM_LOGS_FORMATTER,
     level=SYSTEM_LOGS_LEVEL,
     handlers=[
-        FileHandler(SYSTEM_LOGS_FILENAME),
+        FileHandler(SYSTEM_LOGS_FILENAME, mode="w"),
         StreamHandler(),
     ],
 )
