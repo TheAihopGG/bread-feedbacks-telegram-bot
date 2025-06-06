@@ -1,6 +1,7 @@
 from .base import Base
 from .blacklist_users import BlacklistUserModel
 from .feedbacks import FeedbackModel
+from .event import EventModel
 
 # from .blacklist_user_added import BlacklistUserAddedLogModel
 # from .blacklist_user_deleted import BlacklistUserDeletedLogModel
@@ -12,6 +13,7 @@ __all__ = [
     "BlacklistUserModel",
     "FeedbackModel",
     "Base",
+    "EventModel",
     # "BlacklistUserAddedLogModel",
     # "BlacklistUserDeletedLogModel",
     # "FeedbackCreatedLogModel",
