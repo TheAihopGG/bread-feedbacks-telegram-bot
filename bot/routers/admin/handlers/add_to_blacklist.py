@@ -1,4 +1,3 @@
-import re
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 from aiogram.methods import GetChat
