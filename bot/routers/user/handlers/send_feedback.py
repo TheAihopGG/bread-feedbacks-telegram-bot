@@ -15,25 +15,31 @@ from ....core.configs.bot_config import FEEDBACK_MAX_LEN
 from ..forms import SendFeedbackForm
 
 
-async def send_feedback(call: CallbackQuery, state: FSMContext):
+async def send_feedback(
+    call: CallbackQuery,
+    state: FSMContext,
+):
     if call.message:
         await state.clear()
         await state.set_state(SendFeedbackForm.message)
 
         await call.message.answer(
-            get_locale_value("SEND_FEEDBACK_ANSWER", "ru"),
+            get_locale_value("SEND_FEEDBACK_COMMAND_ANSWER_GET_MESSAGE", "ru"),
             reply_markup=cancel_and_menu_inline_keyboard,
         )
 
 
-async def send_feedback_get_message(message: Message, state: FSMContext):
+async def send_feedback_get_message(
+    message: Message,
+    state: FSMContext,
+):
     if message.text:
         if len(message.text) < FEEDBACK_MAX_LEN:
             await state.update_data(message=message.text)
             await state.set_state(SendFeedbackForm.rate)
 
             await message.answer(
-                get_locale_value("SEND_FEEDBACK_ANSWER_STEP_1", "ru"),
+                get_locale_value("SEND_FEEDBACK_COMMAND_ANSWER_GET_RATE", "ru"),
                 reply_markup=cancel_and_menu_inline_keyboard,
             )
             await message.answer(
@@ -61,7 +67,10 @@ async def send_feedback_get_message(message: Message, state: FSMContext):
             )
 
 
-async def send_feedback_get_rate(message: Message, state: FSMContext):
+async def send_feedback_get_rate(
+    message: Message,
+    state: FSMContext,
+):
     if message.text:
         if re.search(r"^[12345]{1}$", message.text):
             rate = int(message.text)
@@ -69,7 +78,9 @@ async def send_feedback_get_rate(message: Message, state: FSMContext):
             await state.set_state(SendFeedbackForm.will_he_by_more)
 
             await message.answer(
-                get_locale_value("SEND_FEEDBACK_ANSWER_STEP_2", "ru"),
+                get_locale_value(
+                    "SEND_FEEDBACK_COMMAND_ANSWER_GET_WILL_HE_BY_MORE", "ru"
+                ),
                 reply_markup=cancel_and_menu_inline_keyboard,
             )
             await message.answer(
@@ -83,10 +94,25 @@ async def send_feedback_get_rate(message: Message, state: FSMContext):
             )
 
 
-async def send_feedback_get_will_he_by_more(message: Message, state: FSMContext):
+async def send_feedback_get_will_he_by_more(
+    message: Message,
+    state: FSMContext,
+):
     if message.text and message.from_user:
-        if re.search(r"^Да|Нет$", message.text):
-            await state.update_data(will_he_by_more=message.text == "y")
+        if message.text == get_locale_value(
+            "YES",
+            "ru",
+        ) or message.text == get_locale_value(
+            "NO",
+            "ru",
+        ):
+            await state.update_data(
+                will_he_by_more=message.text
+                == get_locale_value(
+                    "YES",
+                    "ru",
+                )
+            )
             data = await state.get_data()
             await state.clear()
 
@@ -99,7 +125,7 @@ async def send_feedback_get_will_he_by_more(message: Message, state: FSMContext)
                     author_telegram_id=message.from_user.id,
                 ):
                     await message.answer(
-                        get_locale_value("SEND_FEEDBACK_ANSWER_STEP_3", "ru")
+                        get_locale_value("SEND_FEEDBACK_COMMAND_ANSWER_SUCCESS", "ru")
                     )
         else:
             await message.answer(
