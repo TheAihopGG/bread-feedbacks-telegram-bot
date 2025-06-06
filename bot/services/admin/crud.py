@@ -4,6 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...core.database import sessionmaker
 from ...core.models import BlacklistUserModel
 from ...core.configs.bot_config import ADMIN_ID
+from ...core.logs_event_types import LogEventType
+from ...services.event.crud import log_add_event
 
 
 async def is_in_blacklist(
@@ -34,6 +36,12 @@ async def add_to_blacklist(
     session.add(blacklist_user_object)
     await session.commit()
 
+    await log_add_event(
+        session,
+        event_type=LogEventType.USER_WAS_ADDED_TO_BLACKLIST,
+        metadata={"user_telegram_id": telegram_id},
+    )
+
     return True
 
 
@@ -49,6 +57,12 @@ async def remove_from_blacklist(
         ),
     )
     await session.commit()
+
+    await log_add_event(
+        session,
+        event_type=LogEventType.USER_WAS_REMOVED_FROM_BLACKLIST,
+        metadata={"user_telegram_id": telegram_id},
+    )
 
     return bool(result.rowcount)
 

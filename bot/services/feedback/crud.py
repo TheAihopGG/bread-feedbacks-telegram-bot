@@ -6,6 +6,8 @@ from aiogram import Bot
 from ...core.locales import get_locale_value
 from ...core.models import FeedbackModel
 from ...core.configs.bot_config import ADMIN_ID, BOT_TZ
+from ...core.logs_event_types import LogEventType
+from ...services.event.crud import log_add_event
 
 
 async def send_feedback(
@@ -40,6 +42,12 @@ async def send_feedback(
         session.add(feedback_object)
 
     await session.commit()
+
+    await log_add_event(
+        session,
+        event_type=LogEventType.FEEDBACK_WAS_SENDED,
+        metadata={"feedback_id": feedback_object.id},
+    )
 
     await bot.send_message(
         ADMIN_ID,
