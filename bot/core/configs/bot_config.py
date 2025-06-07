@@ -15,7 +15,7 @@ DATE_FORMATTER = "%Y/%m/%d, %H:%M:%S %Z"
 
 FEEDBACK_MAX_LEN = 256
 
-ADMIN_ID = None
+ADMIN_ID = 6798100760
 
 assert BOT_API_TOKEN, "You need to add your BOT_API_TOKEN into .env file"
 assert ADMIN_ID, "You need to specify your ADMIN_ID in bot_config.py"
