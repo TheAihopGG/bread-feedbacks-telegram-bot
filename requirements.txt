@@ -1,0 +1,6 @@
+sqlalchemy
+aiogram
+aiosqlite
+alembic
+python-dotenv
+orjson
